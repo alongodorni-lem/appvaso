@@ -10,6 +10,7 @@ const VASE_IMAGE_CANDIDATES = [
 
 const ui = {
   status: document.getElementById("status"),
+  iosFixBtn: document.getElementById("iosFixBtn"),
   startCaptureBtn: document.getElementById("startCaptureBtn"),
   applyBtn: document.getElementById("applyBtn"),
   saveBtn: document.getElementById("saveBtn"),
@@ -31,8 +32,43 @@ let captureStream;
 let baseImage;
 let hasDrawing = false;
 
+function isIPhoneSafari() {
+  const ua = navigator.userAgent || "";
+  const isIPhone = /iPhone/i.test(ua);
+  const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS/i.test(ua);
+  return isIPhone && isSafari;
+}
+
 function setStatus(message) {
   ui.status.textContent = `Stato: ${message}`;
+}
+
+function patchInlineVideoAttributes() {
+  const videos = document.querySelectorAll("video");
+  videos.forEach((video) => {
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+    video.setAttribute("autoplay", "");
+    video.setAttribute("muted", "");
+    video.playsInline = true;
+    video.muted = true;
+    video.autoplay = true;
+  });
+}
+
+function scheduleSafariVideoFixes() {
+  if (!isIPhoneSafari()) {
+    return;
+  }
+
+  let attempts = 0;
+  const timer = setInterval(() => {
+    patchInlineVideoAttributes();
+    attempts += 1;
+    if (attempts >= 15) {
+      clearInterval(timer);
+    }
+  }, 300);
 }
 
 function loadImage(path) {
@@ -65,8 +101,30 @@ function closeCaptureModal() {
   ui.captureModal.classList.add("hidden");
 }
 
+async function onIosFix() {
+  if (!isIPhoneSafari()) {
+    setStatus("Fix iPhone disponibile solo su Safari iPhone.");
+    return;
+  }
+
+  try {
+    setStatus("attivazione camera iPhone...");
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: "environment" } },
+      audio: false,
+    });
+    stream.getTracks().forEach((track) => track.stop());
+    patchInlineVideoAttributes();
+    setStatus("camera iPhone attivata. ricarico la pagina AR...");
+    setTimeout(() => window.location.reload(), 450);
+  } catch (_error) {
+    setStatus("permesso camera negato o non disponibile su Safari.");
+  }
+}
+
 async function initialize() {
   setStatus("caricamento immagine vaso...");
+  scheduleSafariVideoFixes();
   baseImage = await loadFirstAvailableImage(VASE_IMAGE_CANDIDATES);
 
   canvases.vaseTexture.width = 1024;
@@ -75,7 +133,11 @@ async function initialize() {
   ctx.drawImage(baseImage, 0, 0, canvases.vaseTexture.width, canvases.vaseTexture.height);
 
   setupArScene(vasePlane, canvases.vaseTexture);
-  setStatus("pronto. inquadra il marker HIRO.");
+  if (isIPhoneSafari()) {
+    setStatus("iPhone: premi 'Attiva AR iPhone' se lo sfondo resta nero.");
+  } else {
+    setStatus("pronto. inquadra il marker HIRO.");
+  }
 }
 
 async function onStartCapture() {
@@ -136,10 +198,17 @@ function onCloseCapture() {
 }
 
 ui.startCaptureBtn.addEventListener("click", onStartCapture);
+ui.iosFixBtn.addEventListener("click", onIosFix);
 ui.snapBtn.addEventListener("click", onSnap);
 ui.applyBtn.addEventListener("click", onApply);
 ui.saveBtn.addEventListener("click", onSave);
 ui.closeCaptureBtn.addEventListener("click", onCloseCapture);
+
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && isIPhoneSafari()) {
+    patchInlineVideoAttributes();
+  }
+});
 
 initialize().catch((error) => {
   console.error(error);

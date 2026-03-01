@@ -10,6 +10,14 @@ body {
   height: 100%;
   font-family: Arial, sans-serif;
   background: #111;
+  overflow: hidden;
+}
+
+a-scene {
+  position: fixed !important;
+  inset: 0;
+  width: 100vw !important;
+  height: 100vh !important;
 }
 
 #ui {
@@ -51,6 +59,10 @@ button {
 
 button:disabled {
   opacity: 0.5;
+}
+
+#iosFixBtn {
+  background: #9ce4ff;
 }
 
 .modal {
