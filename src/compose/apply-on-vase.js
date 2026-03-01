@@ -59,20 +59,48 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
   ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
   ctx.clip();
 
-  ctx.globalAlpha = 0.8;
-  ctx.globalCompositeOperation = "multiply";
   const bounds = getOpaqueBounds(drawingCanvas);
   if (bounds) {
+    const ratio = bounds.sw / bounds.sh;
+    const maxDestWidth = rx * 1.75;
+    const maxDestHeight = ry * 1.25;
+    let destWidth = maxDestWidth;
+    let destHeight = destWidth / ratio;
+    if (destHeight > maxDestHeight) {
+      destHeight = maxDestHeight;
+      destWidth = destHeight * ratio;
+    }
+
+    const dx = cx - destWidth / 2;
+    const dy = cy - destHeight / 2;
+
+    // Two passes simulate a slight engraved effect.
+    ctx.globalCompositeOperation = "multiply";
+    ctx.globalAlpha = 0.72;
     ctx.drawImage(
       drawingCanvas,
       bounds.sx,
       bounds.sy,
       bounds.sw,
       bounds.sh,
-      cx - rx,
-      cy - ry,
-      rx * 2,
-      ry * 2
+      dx,
+      dy + 1,
+      destWidth,
+      destHeight
+    );
+
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = 0.2;
+    ctx.drawImage(
+      drawingCanvas,
+      bounds.sx,
+      bounds.sy,
+      bounds.sw,
+      bounds.sh,
+      dx,
+      dy - 1,
+      destWidth,
+      destHeight
     );
   }
 

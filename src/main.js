@@ -17,6 +17,7 @@ const ui = {
   closeCaptureBtn: document.getElementById("closeCaptureBtn"),
   captureModal: document.getElementById("captureModal"),
   captureVideo: document.getElementById("captureVideo"),
+  captureFrame: document.getElementById("captureFrame"),
 };
 
 const canvases = {
@@ -100,6 +101,25 @@ function closeCaptureModal() {
   ui.captureModal.classList.add("hidden");
 }
 
+function getFrameSourceRect(videoElement, frameElement) {
+  const videoRect = videoElement.getBoundingClientRect();
+  const frameRect = frameElement.getBoundingClientRect();
+
+  if (!videoRect.width || !videoRect.height) {
+    return null;
+  }
+
+  const scaleX = (videoElement.videoWidth || 1) / videoRect.width;
+  const scaleY = (videoElement.videoHeight || 1) / videoRect.height;
+
+  const x = (frameRect.left - videoRect.left) * scaleX;
+  const y = (frameRect.top - videoRect.top) * scaleY;
+  const width = frameRect.width * scaleX;
+  const height = frameRect.height * scaleY;
+
+  return { x, y, width, height };
+}
+
 async function initialize() {
   setStatus("caricamento immagine vaso...");
   scheduleSafariVideoFixes();
@@ -117,9 +137,9 @@ async function initialize() {
 async function onStartCapture() {
   try {
     openCaptureModal();
-    setStatus("attiva la camera per acquisire il foglio...");
+    setStatus("attiva la camera e allinea il nome scritto nel riquadro.");
     captureStream = await startCapture(ui.captureVideo);
-    setStatus("camera attiva. premi Scatta.");
+    setStatus("camera attiva. allinea il nome nel riquadro e premi Scatta.");
   } catch (_error) {
     closeCaptureModal();
     setStatus("errore camera. controlla i permessi del browser.");
@@ -133,7 +153,8 @@ async function onSnap() {
   }
 
   setStatus("acquisizione in corso...");
-  snapFrame(ui.captureVideo, canvases.drawing);
+  const sourceRect = getFrameSourceRect(ui.captureVideo, ui.captureFrame);
+  snapFrame(ui.captureVideo, canvases.drawing, sourceRect);
   await extractDrawing(canvases.drawing, canvases.processed);
 
   hasDrawing = true;
@@ -141,19 +162,19 @@ async function onSnap() {
   closeCaptureModal();
   stopCapture(captureStream);
   captureStream = undefined;
-  setStatus("disegno acquisito. premi Applica al vaso.");
+  setStatus("nome acquisito. premi Applica al vaso.");
 }
 
 function onApply() {
   if (!hasDrawing) {
-    setStatus("acquisisci prima un disegno.");
+    setStatus("acquisisci prima il nome.");
     return;
   }
 
   composeOnVase(baseImage, canvases.processed, canvases.vaseTexture);
   refreshPlaneTexture(vasePlane);
   ui.saveBtn.disabled = false;
-  setStatus("decorazione applicata al vaso AR.");
+  setStatus("nome applicato al vaso AR.");
 }
 
 function onSave() {

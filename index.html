@@ -16,16 +16,21 @@
     <p id="status">Stato: inizializzazione...</p>
   </div>
   <div id="controlsDock" class="controls">
-    <button id="startCaptureBtn" type="button">Acquisisci disegno</button>
-    <button id="applyBtn" type="button" disabled>Applica al vaso</button>
+    <button id="startCaptureBtn" type="button">Acquisisci nome</button>
+    <button id="applyBtn" type="button" disabled>Applica nome al vaso</button>
     <button id="saveBtn" type="button" disabled>Salva foto</button>
   </div>
 
   <div id="captureModal" class="modal hidden">
     <div class="modalContent">
-      <h2>Acquisizione foglio</h2>
-      <p>Posiziona il foglio su sfondo uniforme e ben illuminato.</p>
-      <video id="captureVideo" autoplay playsinline muted></video>
+      <h2>Acquisizione nome</h2>
+      <p>Allinea il nome scritto a mano dentro la cornice e scatta.</p>
+      <div class="captureStage">
+        <video id="captureVideo" autoplay playsinline muted></video>
+        <div id="captureFrame" class="captureFrame">
+          <span>Allinea qui il nome</span>
+        </div>
+      </div>
       <div class="controls">
         <button id="snapBtn" type="button">Scatta</button>
         <button id="closeCaptureBtn" type="button">Chiudi</button>
