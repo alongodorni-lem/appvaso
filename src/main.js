@@ -38,7 +38,6 @@ let baseSource;
 let baseVideo;
 let hasDrawing = false;
 let hasAppliedName = false;
-let nameOverlayCanvas;
 let isVideoMode = false;
 let renderLoopId;
 const VIDEO_EXPORT_MS = 4000;
@@ -180,25 +179,18 @@ function getFrameSourceRect(videoElement, frameElement) {
   return { x, y, width, height };
 }
 
-function createTransparentCanvas(width, height) {
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  return canvas;
-}
-
-function ensureOverlayCanvas(width, height) {
-  if (!nameOverlayCanvas) {
-    nameOverlayCanvas = document.createElement("canvas");
-  }
-  nameOverlayCanvas.width = width;
-  nameOverlayCanvas.height = height;
-}
-
 function drawBaseToTexture() {
   const ctx = canvases.vaseTexture.getContext("2d");
   ctx.clearRect(0, 0, canvases.vaseTexture.width, canvases.vaseTexture.height);
   ctx.drawImage(baseSource, 0, 0, canvases.vaseTexture.width, canvases.vaseTexture.height);
+}
+
+function getVideoPhase(video) {
+  if (!video || !video.duration || !Number.isFinite(video.duration) || video.duration <= 0) {
+    return 0;
+  }
+  const normalized = (video.currentTime % video.duration) / video.duration;
+  return normalized;
 }
 
 function renderArTextureFrame() {
@@ -211,11 +203,11 @@ function renderArTextureFrame() {
     return;
   }
 
-  drawBaseToTexture();
-
-  if (hasAppliedName && nameOverlayCanvas) {
-    const ctx = canvases.vaseTexture.getContext("2d");
-    ctx.drawImage(nameOverlayCanvas, 0, 0, canvases.vaseTexture.width, canvases.vaseTexture.height);
+  if (hasAppliedName) {
+    const phase = isVideoMode ? getVideoPhase(baseVideo) : 0;
+    composeOnVase(baseSource, canvases.processed, canvases.vaseTexture, { phase });
+  } else {
+    drawBaseToTexture();
   }
 
   refreshPlaneTexture(vasePlane);
@@ -342,7 +334,6 @@ async function initialize() {
   const height = isVideoMode ? (baseVideo.videoHeight || 1024) : 1024;
   canvases.vaseTexture.width = width;
   canvases.vaseTexture.height = height;
-  ensureOverlayCanvas(width, height);
   drawBaseToTexture();
 
   setupArScene(vasePlane, canvases.vaseTexture);
@@ -399,9 +390,6 @@ function onApply() {
     return;
   }
 
-  const transparentBase = createTransparentCanvas(canvases.vaseTexture.width, canvases.vaseTexture.height);
-  ensureOverlayCanvas(canvases.vaseTexture.width, canvases.vaseTexture.height);
-  composeOnVase(transparentBase, canvases.processed, nameOverlayCanvas);
   hasAppliedName = true;
 
   if (isVideoMode && baseVideo && baseVideo.paused) {

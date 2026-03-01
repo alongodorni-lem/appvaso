@@ -124,7 +124,18 @@ function drawCurvedTextBand(ctx, inkCanvas, config) {
   }
 }
 
-export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
+function getRotationMapping(phase) {
+  const angle = phase * Math.PI * 2;
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  const front = Math.max(cos, 0);
+  return {
+    front,
+    sin,
+  };
+}
+
+export function composeOnVase(baseImage, drawingCanvas, outputCanvas, options = {}) {
   const ctx = outputCanvas.getContext("2d");
   drawBase(baseImage, outputCanvas);
 
@@ -133,6 +144,13 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
   const cy = outputCanvas.height * 0.49;
   const rx = outputCanvas.width * 0.33;
   const ry = outputCanvas.height * 0.095;
+
+  const phase = typeof options.phase === "number" ? options.phase : 0;
+  const phaseOffset = typeof options.phaseOffset === "number" ? options.phaseOffset : 0.03;
+  const mapping = getRotationMapping((phase + phaseOffset) % 1);
+  if (mapping.front < 0.05) {
+    return;
+  }
 
   ctx.save();
   ctx.beginPath();
@@ -152,8 +170,14 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
       destWidth = destHeight * ratio;
     }
 
-    const dx = cx - destWidth / 2;
+    const widthScale = 0.25 + mapping.front * 0.75;
+    destWidth *= widthScale;
+    const xShift = mapping.sin * rx * 0.68;
+    const dx = cx - destWidth / 2 + xShift;
     const dy = cy - destHeight / 2 - ry * 0.03;
+    const edgeCompression = 0.22 + (1 - mapping.front) * 0.55;
+    const darkAlpha = 0.34 + mapping.front * 0.58;
+    const lightAlpha = 0.06 + mapping.front * 0.18;
 
     drawCurvedTextBand(ctx, inkCanvas, {
       x: dx,
@@ -161,9 +185,9 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
       width: destWidth,
       height: destHeight,
       centerDipPx: outputCanvas.height * 0.024,
-      edgeCompression: 0.36,
-      darkAlpha: 0.66,
-      lightAlpha: 0.17,
+      edgeCompression,
+      darkAlpha,
+      lightAlpha,
     });
   }
 
