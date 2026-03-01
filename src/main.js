@@ -10,7 +10,6 @@ const VASE_IMAGE_CANDIDATES = [
 
 const ui = {
   status: document.getElementById("status"),
-  iosFixBtn: document.getElementById("iosFixBtn"),
   startCaptureBtn: document.getElementById("startCaptureBtn"),
   applyBtn: document.getElementById("applyBtn"),
   saveBtn: document.getElementById("saveBtn"),
@@ -101,27 +100,6 @@ function closeCaptureModal() {
   ui.captureModal.classList.add("hidden");
 }
 
-async function onIosFix() {
-  if (!isIPhoneSafari()) {
-    setStatus("Fix iPhone disponibile solo su Safari iPhone.");
-    return;
-  }
-
-  try {
-    setStatus("attivazione camera iPhone...");
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: "environment" } },
-      audio: false,
-    });
-    stream.getTracks().forEach((track) => track.stop());
-    patchInlineVideoAttributes();
-    setStatus("camera iPhone attivata. ricarico la pagina AR...");
-    setTimeout(() => window.location.reload(), 450);
-  } catch (_error) {
-    setStatus("permesso camera negato o non disponibile su Safari.");
-  }
-}
-
 async function initialize() {
   setStatus("caricamento immagine vaso...");
   scheduleSafariVideoFixes();
@@ -133,11 +111,7 @@ async function initialize() {
   ctx.drawImage(baseImage, 0, 0, canvases.vaseTexture.width, canvases.vaseTexture.height);
 
   setupArScene(vasePlane, canvases.vaseTexture);
-  if (isIPhoneSafari()) {
-    setStatus("iPhone: premi 'Attiva AR iPhone' se lo sfondo resta nero.");
-  } else {
-    setStatus("pronto. inquadra il marker HIRO.");
-  }
+  setStatus("pronto. inquadra il marker HIRO.");
 }
 
 async function onStartCapture() {
@@ -198,7 +172,6 @@ function onCloseCapture() {
 }
 
 ui.startCaptureBtn.addEventListener("click", onStartCapture);
-ui.iosFixBtn.addEventListener("click", onIosFix);
 ui.snapBtn.addEventListener("click", onSnap);
 ui.applyBtn.addEventListener("click", onApply);
 ui.saveBtn.addEventListener("click", onSave);

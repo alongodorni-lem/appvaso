@@ -90,19 +90,15 @@ button:disabled {
   opacity: 0.5;
 }
 
-#iosFixBtn {
-  background: #9ce4ff;
-}
-
 .modal {
   position: fixed;
   inset: 0;
   z-index: 30000;
   background: rgba(0, 0, 0, 0.78);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 16px;
+  padding: calc(env(safe-area-inset-top) + 10px) 12px calc(env(safe-area-inset-bottom) + 10px);
 }
 
 .modalContent {
@@ -111,12 +107,23 @@ button:disabled {
   color: #fff;
   border-radius: 12px;
   padding: 16px;
+  max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 20px);
+  overflow: auto;
 }
 
 #captureVideo {
   width: 100%;
   border-radius: 8px;
   background: #000;
+  max-height: 52dvh;
+  object-fit: cover;
+}
+
+.modalContent .controls {
+  position: sticky;
+  bottom: 0;
+  background: #222;
+  padding-top: 8px;
 }
 
 .hidden {
