@@ -33,15 +33,16 @@ video[id^="arjs-video"] {
 }
 
 #ui {
-  position: fixed;
-  top: 10px;
+  position: fixed !important;
+  top: max(8px, env(safe-area-inset-top));
   left: 10px;
   right: 10px;
-  z-index: 10;
+  z-index: 20000;
   background: rgba(0, 0, 0, 0.6);
   color: #fff;
   border-radius: 12px;
   padding: 12px;
+  pointer-events: auto;
 }
 
 #ui h1 {
@@ -57,7 +58,21 @@ video[id^="arjs-video"] {
 .controls {
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+#controlsDock {
+  position: fixed !important;
+  left: 10px;
+  right: 10px;
+  bottom: max(10px, env(safe-area-inset-bottom));
+  z-index: 20001;
+  background: rgba(0, 0, 0, 0.65);
+  border-radius: 12px;
+  padding: 10px;
+  pointer-events: auto;
 }
 
 button {
@@ -67,6 +82,8 @@ button {
   font-weight: 700;
   background: #ffd45a;
   color: #212121;
+  flex: 0 0 auto;
+  min-height: 44px;
 }
 
 button:disabled {
@@ -80,7 +97,7 @@ button:disabled {
 .modal {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 30000;
   background: rgba(0, 0, 0, 0.78);
   display: flex;
   align-items: center;
