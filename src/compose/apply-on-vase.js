@@ -44,15 +44,95 @@ function getOpaqueBounds(canvas) {
   };
 }
 
+function buildInkCanvas(sourceCanvas, bounds) {
+  const inkCanvas = document.createElement("canvas");
+  inkCanvas.width = bounds.sw;
+  inkCanvas.height = bounds.sh;
+  const inkCtx = inkCanvas.getContext("2d");
+
+  inkCtx.drawImage(
+    sourceCanvas,
+    bounds.sx,
+    bounds.sy,
+    bounds.sw,
+    bounds.sh,
+    0,
+    0,
+    bounds.sw,
+    bounds.sh
+  );
+
+  return inkCanvas;
+}
+
+function drawCurvedTextBand(ctx, inkCanvas, config) {
+  const {
+    x,
+    y,
+    width,
+    height,
+    centerDipPx,
+    edgeCompression,
+    darkAlpha,
+    lightAlpha,
+  } = config;
+
+  const srcW = inkCanvas.width;
+  const srcH = inkCanvas.height;
+  const sliceW = 2;
+
+  for (let sx = 0; sx < srcW; sx += sliceW) {
+    const sw = Math.min(sliceW, srcW - sx);
+    const t = (sx + sw * 0.5) / srcW;
+    const norm = (t - 0.5) * 2;
+
+    const centerWeight = 1 - norm * norm;
+    const curveY = y + centerWeight * centerDipPx;
+    const compressedH = height * (1 - Math.abs(norm) * edgeCompression);
+    const yOffset = (height - compressedH) * 0.5;
+
+    const dx = x + t * width;
+    const dw = (sw / srcW) * width + 0.5;
+
+    ctx.globalCompositeOperation = "multiply";
+    ctx.globalAlpha = darkAlpha;
+    ctx.drawImage(
+      inkCanvas,
+      sx,
+      0,
+      sw,
+      srcH,
+      dx,
+      curveY + yOffset + 1,
+      dw,
+      compressedH
+    );
+
+    ctx.globalCompositeOperation = "screen";
+    ctx.globalAlpha = lightAlpha;
+    ctx.drawImage(
+      inkCanvas,
+      sx,
+      0,
+      sw,
+      srcH,
+      dx,
+      curveY + yOffset - 1,
+      dw,
+      compressedH
+    );
+  }
+}
+
 export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
   const ctx = outputCanvas.getContext("2d");
   drawBase(baseImage, outputCanvas);
 
-  // Fascia decorabile approssimata per MVP sulla pancia del vaso.
+  // Fascia decorabile sotto la linea chiara del vaso.
   const cx = outputCanvas.width * 0.5;
-  const cy = outputCanvas.height * 0.53;
-  const rx = outputCanvas.width * 0.33;
-  const ry = outputCanvas.height * 0.11;
+  const cy = outputCanvas.height * 0.565;
+  const rx = outputCanvas.width * 0.345;
+  const ry = outputCanvas.height * 0.115;
 
   ctx.save();
   ctx.beginPath();
@@ -61,9 +141,10 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
 
   const bounds = getOpaqueBounds(drawingCanvas);
   if (bounds) {
-    const ratio = bounds.sw / bounds.sh;
-    const maxDestWidth = rx * 1.75;
-    const maxDestHeight = ry * 1.25;
+    const inkCanvas = buildInkCanvas(drawingCanvas, bounds);
+    const ratio = inkCanvas.width / inkCanvas.height;
+    const maxDestWidth = rx * 1.76;
+    const maxDestHeight = ry * 0.86;
     let destWidth = maxDestWidth;
     let destHeight = destWidth / ratio;
     if (destHeight > maxDestHeight) {
@@ -72,36 +153,18 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas) {
     }
 
     const dx = cx - destWidth / 2;
-    const dy = cy - destHeight / 2;
+    const dy = cy - destHeight / 2 - ry * 0.12;
 
-    // Two passes simulate a slight engraved effect.
-    ctx.globalCompositeOperation = "multiply";
-    ctx.globalAlpha = 0.72;
-    ctx.drawImage(
-      drawingCanvas,
-      bounds.sx,
-      bounds.sy,
-      bounds.sw,
-      bounds.sh,
-      dx,
-      dy + 1,
-      destWidth,
-      destHeight
-    );
-
-    ctx.globalCompositeOperation = "screen";
-    ctx.globalAlpha = 0.2;
-    ctx.drawImage(
-      drawingCanvas,
-      bounds.sx,
-      bounds.sy,
-      bounds.sw,
-      bounds.sh,
-      dx,
-      dy - 1,
-      destWidth,
-      destHeight
-    );
+    drawCurvedTextBand(ctx, inkCanvas, {
+      x: dx,
+      y: dy,
+      width: destWidth,
+      height: destHeight,
+      centerDipPx: outputCanvas.height * 0.014,
+      edgeCompression: 0.22,
+      darkAlpha: 0.74,
+      lightAlpha: 0.19,
+    });
   }
 
   ctx.restore();
