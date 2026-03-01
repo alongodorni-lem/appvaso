@@ -53,6 +53,7 @@ function patchInlineVideoAttributes() {
     video.playsInline = true;
     video.muted = true;
     video.autoplay = true;
+    video.controls = false;
   });
 }
 
@@ -65,10 +66,17 @@ function scheduleSafariVideoFixes() {
   const timer = setInterval(() => {
     patchInlineVideoAttributes();
     attempts += 1;
-    if (attempts >= 15) {
+    if (attempts >= 80) {
       clearInterval(timer);
     }
   }, 300);
+
+  const observer = new MutationObserver(() => {
+    patchInlineVideoAttributes();
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  setTimeout(() => observer.disconnect(), 30000);
 }
 
 function loadImage(path) {

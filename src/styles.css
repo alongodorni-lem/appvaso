@@ -18,12 +18,14 @@ a-scene {
   inset: 0;
   width: 100vw !important;
   height: 100vh !important;
-  z-index: 0 !important;
-  pointer-events: none !important;
+  z-index: 2 !important;
+  pointer-events: auto !important;
 }
 
-a-scene canvas {
-  pointer-events: none !important;
+a-scene canvas,
+canvas.a-canvas {
+  z-index: 2 !important;
+  pointer-events: auto !important;
 }
 
 #arjs-video,
@@ -33,7 +35,7 @@ video[id^="arjs-video"] {
   width: 100vw !important;
   height: 100vh !important;
   object-fit: cover;
-  z-index: 0 !important;
+  z-index: 1 !important;
   background: #000;
 }
 
