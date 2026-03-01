@@ -60,7 +60,7 @@ export async function extractDrawing(sourceCanvas, destinationCanvas) {
   const gray = new cv.Mat();
   const blur = new cv.Mat();
   const mask = new cv.Mat();
-  const dst = new cv.Mat();
+  const dst = new cv.Mat.zeros(src.rows, src.cols, cv.CV_8UC4);
 
   cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
   cv.GaussianBlur(gray, blur, new cv.Size(5, 5), 0, 0, cv.BORDER_DEFAULT);
@@ -75,17 +75,18 @@ export async function extractDrawing(sourceCanvas, destinationCanvas) {
   );
   const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(2, 2));
   cv.morphologyEx(mask, mask, cv.MORPH_OPEN, kernel);
-  cv.cvtColor(mask, dst, cv.COLOR_GRAY2RGBA, 0);
-
-  const rgbaData = dst.data;
-  for (let i = 0; i < rgbaData.length; i += 4) {
-    if (rgbaData[i] < 25) {
-      rgbaData[i + 3] = 0;
+  const srcData = src.data;
+  const maskData = mask.data;
+  const dstData = dst.data;
+  for (let i = 0, p = 0; i < dstData.length; i += 4, p += 1) {
+    if (maskData[p] > 25) {
+      // Keep the original handwriting color from the captured frame.
+      dstData[i] = srcData[i];
+      dstData[i + 1] = srcData[i + 1];
+      dstData[i + 2] = srcData[i + 2];
+      dstData[i + 3] = 255;
     } else {
-      rgbaData[i] = 30;
-      rgbaData[i + 1] = 30;
-      rgbaData[i + 2] = 30;
-      rgbaData[i + 3] = 255;
+      dstData[i + 3] = 0;
     }
   }
 
