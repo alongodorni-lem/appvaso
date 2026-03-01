@@ -39,10 +39,9 @@
   <canvas id="processedCanvas" width="1024" height="1024" class="hidden"></canvas>
 
   <a-scene
-    embedded
     renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true;"
     vr-mode-ui="enabled: false"
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+    arjs="trackingMethod: best; sourceType: webcam; facingMode: environment; sourceWidth: 1280; sourceHeight: 720; debugUIEnabled: false;"
   >
     <a-marker preset="hiro">
       <a-plane
