@@ -12,85 +12,10 @@ active_command: |
   git remote add origin https://github.com/alongodorni-lem/appvaso.git
   git pull origin main --allow-unrelated-histories
   git push -u origin main
-last_command: git ls-files
-last_exit_code: 0
 ---
-PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo>    py -m http.server 8090 --bind 0.0.0.0
-Traceback (most recent call last):
-  File "<frozen runpy>", line 198, in _run_module_as_main
-  File "<frozen runpy>", line 88, in _run_code
-  File "C:\Users\along\AppData\Local\Python\pythoncore-3.14-64\Lib\http\server.py", line 1432, in <module>
-    test(
-    ~~~~^
-        HandlerClass=handler_class,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    ...<6 lines>...
-        tls_password=tls_key_password,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\along\AppData\Local\Python\pythoncore-3.14-64\Lib\http\server.py", line 1348, in test
-    server = ServerClass(addr, HandlerClass)
-  File "C:\Users\along\AppData\Local\Python\pythoncore-3.14-64\Lib\socketserver.py", line 457, in __init__
-    self.server_bind()
-    ~~~~~~~~~~~~~~~~^^
-  File "C:\Users\along\AppData\Local\Python\pythoncore-3.14-64\Lib\http\server.py", line 1419, in server_bind
-    return super().server_bind()
-           ~~~~~~~~~~~~~~~~~~~^^
-  File "C:\Users\along\AppData\Local\Python\pythoncore-3.14-64\Lib\http\server.py", line 148, in server_bind
-    socketserver.TCPServer.server_bind(self)
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
-  File "C:\Users\along\AppData\Local\Python\pythoncore-3.14-64\Lib\socketserver.py", line 478, in \Lib\socketserver.py", line 478, in server_bind      self.socket.bind(self.server_addr\Lib\socketserver.py", line 478, in server_bind   self.socket.bind(self.server_address)
-    self.socket.bind(self.server_address)     \Lib\socketserver.py", line 478, in server_bind   ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^     
-    self.socket.bind(self.server_address)       rmissionError: [WinError 10013] Tentativo di
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^ d
-    self.socket.bind(self.server_address)     issionError: [WinError 10013] Tentativ
-    self.socket.bind(self.server_address)     tite dalle rispettive autorizzazioni d
-    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^    self.socket.bind(self.server_address) o
-    self.socket.bind(self.server_address)
-    ~~~~~~~~~git init^^^^^^^^^^^^^^^^^^^^               
->> git add .ror: [WinError 10013] Tentativo di accesso a
->> git commit -m "MVP WebAR marker-based"e rispettive au
->> git branch -M mainso
->> git remote add origin <URL_REPO_GITHUB>museo digitale
->> git push -u origin main
-In riga:5 car:23
-+ git remote add origin <URL_REPO_GITHUB>
-+                       ~
-Operatore '<' riservato per utilizzi futuri.
-    + CategoryInfo          : ParserError: (:) [], Par  
-   entContainsErrorRecordException
-    + FullyQualifiedErrorId : RedirectionNotSupported   
-
-PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo> git init
->> git add .
->> git commit -m "MVP WebAR marker-based"
->> git branch -M main
->> git remote remove origin
->> git remote add origin https://github.com/alongodorni-lem/appvaso.git
->> git push -u origin main
-Initialized empty Git repository in C:/Users/along/Documents/attivita 2025/museo digitale/testcursor_museo/.git/
-[master (root-commit) ae8b830] MVP WebAR marker-based
- 1 file changed, 0 insertions(+), 0 deletions(-)        
- create mode 100644 Hiro pattern.pdf
-error: No such remote: 'origin'
-Enumerating objects: 3, done.
-Counting objects: 100% (3/3), done.
-Delta compression using up to 16 threads
-Compressing objects: 100% (2/2), done.
-Writing objects: 100% (3/3), 1.37 KiB | 1.37 MiB/s, done.
-Total 3 (delta 0), reused 0 (delta 0), pack-reused 0 (from 0)
-To https://github.com/alongodorni-lem/appvaso.git
- * [new branch]      main -> main
-branch 'main' set up to track 'origin/main'.
-PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo> git ls-files
-Hiro pattern.pdf
-PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo> cd "C:\Users\along\.cursor\projects\c-Users-along-Documents-attivita-2025-museo-digitale-testcursor-museo"
->>
->> git init
->> git add .
->> git commit -m "MVP WebAR marker-based"
->> git branch -M main
->> git remote add origin https://github.com/alongodorni-lem/appvaso.git
->> git pull origin main --allow-unrelated-histories     
->> git push -u origin main
+# especially if it merges an updated upstream into a topic branch.
+#
+# Lines starting with '#' will be ignored, and an empty message aborts
+# the commit.                                           
+.git/MERGE_MSG [unix] (14:19 01/03/2026)         6,1 Bot
+-- VISUAL BLOCK --                           1x1

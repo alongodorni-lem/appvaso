@@ -1,0 +1,24 @@
+---
+pid: 29844
+cwd: |
+  C:\Users\along\.cursor\projects\c-Users-along-Documents-attivita-2025-museo-digitale-testcursor-museo
+active_command: |
+  git init
+  git add .
+  git commit -m "MVP WebAR marker-based"
+  git branch -M main
+  git remote add origin https://github.com/alongodorni-lem/appvaso.git
+  git pull origin main --allow-unrelated-histories
+  git push -u origin main
+last_command: |
+  cd "C:\Users\along\.cursor\projects\c-Users-along-Documents-attivita-2025-museo-digitale-testcursor-museo"
+last_exit_code: 0
+---
+PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo> cd "C:\Users\along\.cursor\projects\c-Users-along-Documents-attivita-2025-museo-digitale-testcursor-museo"
+PS C:\Users\along\.cursor\projects\c-Users-along-Documents-attivita-2025-museo-digitale-testcursor-museo> git init
+>> git add .
+>> git commit -m "MVP WebAR marker-based"
+>> git branch -M main
+>> git remote add origin https://github.com/alongodorni-lem/appvaso.git
+>> git pull origin main --allow-unrelated-histories     
+>> git push -u origin main
