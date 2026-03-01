@@ -1,0 +1,83 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, sans-serif;
+  background: #111;
+}
+
+#ui {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+#ui h1 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+#ui p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  border: 0;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-weight: 700;
+  background: #ffd45a;
+  color: #212121;
+}
+
+button:disabled {
+  opacity: 0.5;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(0, 0, 0, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.modalContent {
+  width: min(580px, 96vw);
+  background: #222;
+  color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+#captureVideo {
+  width: 100%;
+  border-radius: 8px;
+  background: #000;
+}
+
+.hidden {
+  display: none;
+}

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>MVP Museo AR - Vaso personalizzato</title>
+  <link rel="stylesheet" href="./src/styles.css">
+  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+</head>
+<body>
+  <div id="ui">
+    <h1>Laboratorio AR - Vaso</h1>
+    <p>Inquadra il marker HIRO e poi acquisisci il disegno.</p>
+    <div class="controls">
+      <button id="startCaptureBtn" type="button">Acquisisci disegno</button>
+      <button id="applyBtn" type="button" disabled>Applica al vaso</button>
+      <button id="saveBtn" type="button" disabled>Salva foto</button>
+    </div>
+    <p id="status">Stato: inizializzazione...</p>
+  </div>
+
+  <div id="captureModal" class="modal hidden">
+    <div class="modalContent">
+      <h2>Acquisizione foglio</h2>
+      <p>Posiziona il foglio su sfondo uniforme e ben illuminato.</p>
+      <video id="captureVideo" autoplay playsinline muted></video>
+      <div class="controls">
+        <button id="snapBtn" type="button">Scatta</button>
+        <button id="closeCaptureBtn" type="button">Chiudi</button>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="vaseTextureCanvas" width="1024" height="1024" class="hidden"></canvas>
+  <canvas id="drawingCanvas" width="1024" height="1024" class="hidden"></canvas>
+  <canvas id="processedCanvas" width="1024" height="1024" class="hidden"></canvas>
+
+  <a-scene
+    embedded
+    renderer="logarithmicDepthBuffer: true; antialias: true; alpha: true;"
+    vr-mode-ui="enabled: false"
+    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+  >
+    <a-marker preset="hiro">
+      <a-plane
+        id="vasePlane"
+        position="0 0.8 0"
+        rotation="-90 0 0"
+        width="1.4"
+        height="1.0"
+        material="side: double; transparent: true;"
+      ></a-plane>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

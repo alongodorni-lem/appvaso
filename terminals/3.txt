@@ -1,0 +1,50 @@
+---
+pid: 33268
+cwd: |
+  C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo
+active_command: |
+  cd "C:\Users\along\.cursor\projects\c-Users-along-Documents-attivita-2025-museo-digitale-testcursor-museo"
+  dir
+  py -m http.server 8090
+---
+PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo>
+ python -m http.server 8080
+Serving HTTP on :: port 8080 (http://[::]:8080/) ...
+::1 - - [01/Mar/2026 13:30:05] "GET / HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:31:09] "GET / HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:31:13] code 404, message File not found
+::1 - - [01/Mar/2026 13:31:13] "GET /index.html HTTP/1.1" 404 -
+::1 - - [01/Mar/2026 13:31:27] code 404, message File not found
+::1 - - [01/Mar/2026 13:31:27] "GET /index.html HTTP/1.1" 404 -
+
+Keyboard interrupt received, exiting.
+PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo> ^C
+PS C:\Users\along\Documents\attivita 2025\museo digitale\testcursor_museo> cd "C:\Users\along\.cursor\projects\c-Users-along-Documents-attivita-2025-museo-digitale-testcursor-museo"     
+>> dir
+>> py -m http.server 8090
+
+
+    Directory: C:\Users\along\.cursor\projects\c-Users-along- 
+    Documents-attivita-2025-museo-digitale-testcursor-museo   
+
+
+Mode                 LastWriteTime         Length Name        
+----                 -------------         ------ ----        
+d-----        01/03/2026     12:06                agent-trans 
+                                                  cripts      
+d-----        01/03/2026     13:31                assets      
+d-----        01/03/2026     12:03                mcps        
+d-----        01/03/2026     13:19                src
+d-----        01/03/2026     13:29                terminals   
+-a----        01/03/2026     13:18           2292 index.html 
+-a----        01/03/2026     13:20           1172 README.md   
+Serving HTTP on :: port 8090 (http://[::]:8090/) ...
+::1 - - [01/Mar/2026 13:32:41] "GET /index.html HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:41] "GET /src/styles.css HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:41] "GET /src/main.js HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:42] "GET /src/ar/scene.js HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:42] "GET /src/capture/capture-drawing.js HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:42] "GET /src/capture/extract-drawing.js HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:42] "GET /src/compose/.js HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:42] "GET /srcmarkemarkermamarmarker-config.js HTTP/1.1" 200 -
+::1 - - [01/Mar/2026 13:32:42] "GET /assets/c__Users_along_AppData_Roaming_Cursor_User_workspaceStorage_90f16c51277a9e8199eb3a85f42da987_images_museobianchetti_vaso_latumaro-6d2ad710-0526-4d39-83f4-98c2e0321350.png HTTP/1.1" 200 -
