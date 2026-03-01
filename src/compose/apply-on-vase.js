@@ -124,11 +124,23 @@ function drawCurvedTextBand(ctx, inkCanvas, config) {
   }
 }
 
+// Calibration block for spinning-vase video tracking.
+// Tune these values if the name appears slightly early/late or too wide/narrow.
+const VIDEO_TRACKING = {
+  phaseOffset: 0.08,
+  rotationCycles: 0.9,
+  direction: 1,
+  xAmplitude: 0.58,
+  minFrontVisibility: 0.08,
+  minWidthScale: 0.3,
+};
+
 function getRotationMapping(phase) {
-  const angle = phase * Math.PI * 2;
+  const mapped = ((phase * VIDEO_TRACKING.rotationCycles) + VIDEO_TRACKING.phaseOffset) % 1;
+  const angle = mapped * Math.PI * 2 * VIDEO_TRACKING.direction;
   const cos = Math.cos(angle);
   const sin = Math.sin(angle);
-  const front = Math.max(cos, 0);
+  const front = Math.max(cos, VIDEO_TRACKING.minFrontVisibility);
   return {
     front,
     sin,
@@ -146,8 +158,7 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas, options = 
   const ry = outputCanvas.height * 0.095;
 
   const phase = typeof options.phase === "number" ? options.phase : 0;
-  const phaseOffset = typeof options.phaseOffset === "number" ? options.phaseOffset : 0.03;
-  const mapping = getRotationMapping((phase + phaseOffset) % 1);
+  const mapping = getRotationMapping(phase);
   if (mapping.front < 0.05) {
     return;
   }
@@ -170,14 +181,14 @@ export function composeOnVase(baseImage, drawingCanvas, outputCanvas, options = 
       destWidth = destHeight * ratio;
     }
 
-    const widthScale = 0.25 + mapping.front * 0.75;
+    const widthScale = VIDEO_TRACKING.minWidthScale + mapping.front * (1 - VIDEO_TRACKING.minWidthScale);
     destWidth *= widthScale;
-    const xShift = mapping.sin * rx * 0.68;
+    const xShift = mapping.sin * rx * VIDEO_TRACKING.xAmplitude;
     const dx = cx - destWidth / 2 + xShift;
     const dy = cy - destHeight / 2 - ry * 0.03;
-    const edgeCompression = 0.22 + (1 - mapping.front) * 0.55;
-    const darkAlpha = 0.34 + mapping.front * 0.58;
-    const lightAlpha = 0.06 + mapping.front * 0.18;
+    const edgeCompression = 0.26 + (1 - mapping.front) * 0.5;
+    const darkAlpha = 0.4 + mapping.front * 0.48;
+    const lightAlpha = 0.08 + mapping.front * 0.14;
 
     drawCurvedTextBand(ctx, inkCanvas, {
       x: dx,
